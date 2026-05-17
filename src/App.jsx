@@ -413,9 +413,9 @@ h1{color:#16213e;border-bottom:3px solid #c9a84c;padding-bottom:12px}
 .time{font-size:11px;color:#999;margin-top:8px}
 .footer{margin-top:40px;padding-top:20px;border-top:1px solid #ddd;font-size:12px;color:#999;text-align:center}
 </style></head><body>
-<h1>⚖ PeopleOps AI — HR Session Export</h1>
+<h1>👥 PeopleOps AI — HR Session Export</h1>
 <p style="color:#666">Generated: ${ts} | Messages: ${messages.length}</p>
-${messages.map(m => `<div class="msg ${m.role}"><div class="role">${m.role === 'user' ? '👤 You' : '⚖ HR AI'}</div><div>${m.text.replace(/\n/g, '<br>')}</div><div class="time">${m.time?.toLocaleString() || ''}</div></div>`).join('')}
+${messages.map(m => `<div class="msg ${m.role}"><div class="role">${m.role === 'user' ? '👤 You' : '👥 HR AI'}</div><div>${m.text.replace(/\n/g, '<br>')}</div><div class="time">${m.time?.toLocaleString() || ''}</div></div>`).join('')}
 <div class="footer">PeopleOps AI — HR Intelligence Platform | Draft for HR leadership review only</div>
 </body></html>`;
     downloadBlob(new Blob([html], { type: 'text/html' }), `lexicon-session-${ts}.html`);
@@ -689,108 +689,122 @@ Compare the vendor document against the organization standard. Identify every de
 
   /* ─── AGENT RUNNER ─── */
   const AGENT_CONFIGS = {
-    renewal: {
-      name: 'Renewal Watcher',
-      icon: '📅',
-      color: '#C9A84C',
-      desc: 'Scans your contract register for upcoming renewal and cancellation deadlines. Flags contracts requiring action in the next 30, 60, and 90 days.',
+    attrition: {
+      name: 'Attrition Risk Scanner',
+      icon: '⚠️',
+      color: '#D4726A',
+      desc: 'Scores employees for flight risk using tenure, performance, engagement, comp ratio, and behavioral signals. Flags high-risk individuals requiring immediate retention action.',
       sampleData: SAMPLE_CONTRACT_REGISTER,
-      sampleLabel: '20 contracts with various deadlines',
+      sampleLabel: '10 employees with risk indicators',
       acceptTypes: '.csv,.xlsx,.txt',
-      prompt: (data) => `You are the Renewal Watcher managed agent. Analyze this contract register and produce a structured alert report.
+      prompt: (data) => `You are the Attrition Risk Scanner managed agent. Analyze this employee data and produce a structured flight risk report.
 
 Today's date is ${new Date().toISOString().split('T')[0]}.
 
-For each contract, calculate:
-- Days until expiration
-- Whether it auto-renews
-- Whether the cancel-notice window has passed or is approaching
-- Risk level based on value and timeline
+For each employee, assess flight risk based on:
+- Tenure (< 2 years or > 4 years without promotion = higher risk)
+- Performance rating (high performers with low engagement = critical risk)
+- Engagement score (below 3.0 = elevated risk)
+- Compa-ratio (below 0.85 = significant comp-driven risk)
+- Time since last promotion (> 3 years = growth stagnation risk)
+- Manager rating (low manager rating correlates with voluntary attrition)
+- Explicit flight risk signals (competing offers, LinkedIn activity, etc.)
 
 OUTPUT FORMAT:
-## REPORT: Contract Renewal Alert — ${new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+## REPORT: Attrition Risk Report — ${new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
 
-For each contract needing attention, use:
-🔴 F-[NNN] | HIGH RISK | [Contract ID] — [Title]
-REFERENCE: Contract [ID], [Vendor], expires [date], auto-renew: [Y/N], cancel notice: [days]
-ISSUE: [What's happening — approaching deadline, missed cancel window, etc.]
-RECOMMENDED ACTION: "[Specific action to take — cancel, renegotiate, extend, etc. with timeline]"
+For each at-risk employee, use:
+🔴 F-[NNN] | HIGH RISK | [Employee ID] — [Department]
+REFERENCE: Tenure: [X] yrs, Performance: [rating], Engagement: [score], Compa-ratio: [ratio], Last Promotion: [X] yrs ago
+ISSUE: [Why this employee is at risk — specific factors, compounding risks, behavioral signals]
+RECOMMENDED ACTION: [Specific retention action — stay interview, comp adjustment, career conversation, manager intervention, etc.]
 
-Use 🔴 for urgent (within 30 days or cancel window passed), 🟡 for approaching (30-90 days), 🟢 for monitoring (90+ days), 💡 for recommendations.
+Use 🔴 for imminent flight risk (multiple red flags or active signals), 🟡 for elevated risk (2+ moderate factors), 🟢 for watch list (1 factor), 💡 for systemic recommendations.
 
 ## RISK SUMMARY
-Executive summary of the portfolio health, total value at risk, and critical deadlines.
+Overall attrition risk posture — how many employees at risk, estimated cost of turnover, departments most affected, and systemic patterns.
 
 ## KEY ACTIONS
-KA-[N] | [HIGH/MEDIUM/LOW] | [Contract ID] | [Issue] | [Action required with specific date]
+KA-[N] | [HIGH/MEDIUM/LOW] | [Employee/Department] | [Risk factor] | [Specific retention action with timeline]
 
-CONTRACT REGISTER DATA:
+EMPLOYEE DATA:
 ${data}`,
     },
-    regmonitor: {
-      name: 'Reg Monitor',
+    compliance: {
+      name: 'Compliance Deadline Tracker',
       icon: '📋',
       color: '#8B6F47',
-      desc: 'Analyzes regulatory updates for impact on your organization. Produces a prioritized digest with compliance gap analysis and recommended actions.',
+      desc: 'Monitors HR compliance deadlines — I-9 reverifications, visa expirations, mandatory training, policy reviews, certifications. Flags items requiring urgent action.',
       sampleData: SAMPLE_REG_UPDATES,
-      sampleLabel: '7 regulatory updates (SEC, FTC, HHS, DOJ, EU, CA, NY)',
+      sampleLabel: '5 HR compliance deadlines across categories',
       acceptTypes: '.txt,.csv,.pdf',
-      prompt: (data) => `You are the Regulatory Monitor managed agent. Analyze these regulatory updates and produce an impact assessment report for a multinational technology company operating in financial services, healthcare technology, and enterprise SaaS.
+      prompt: (data) => `You are the Compliance Deadline Tracker managed agent. Analyze these HR compliance items and produce a prioritized action report.
+
+Today's date is ${new Date().toISOString().split('T')[0]}.
+
+For each compliance item, assess:
+- Days remaining until deadline
+- Current completion status
+- Risk if deadline is missed (fines, audit exposure, employee impact)
+- Whether the item is on track, at risk, or overdue
 
 OUTPUT FORMAT:
-## REPORT: Regulatory Digest — Week of ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+## REPORT: HR Compliance Deadline Report — ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
 
-For each regulatory item, assess:
-🔴 F-[NNN] | HIGH RISK | [Agency/Regulator] — [Rule Title]
-REFERENCE: [Citation, effective date, comment deadline if applicable]
-ISSUE: [What this regulation requires, who it affects, and why it matters to our business]
-RECOMMENDED ACTION: "[Specific compliance action — policy update, process change, filing required, etc.]"
+For each compliance item:
+🔴 F-[NNN] | HIGH RISK | [Compliance Type] — [Item Description]
+REFERENCE: Deadline: [date], Days remaining: [N], Status: [status], Owner: [owner]
+ISSUE: [What needs to happen, current gap, consequence of missing deadline]
+RECOMMENDED ACTION: [Specific next step — who needs to do what by when]
 
-Use 🔴 for immediate action required, 🟡 for planning needed, 🟢 for monitoring, 💡 for strategic recommendations.
+Use 🔴 for overdue or <14 days remaining, 🟡 for 14-30 days, 🟢 for 30-60 days (on track), 💡 for process improvement recommendations.
 
 ## RISK SUMMARY
-Overall regulatory landscape assessment, most impactful changes, and resource implications.
+Overall compliance posture — items overdue, approaching, on track. Highest-risk areas and resource gaps.
 
 ## KEY ACTIONS
-KA-[N] | [HIGH/MEDIUM/LOW] | [Regulation reference] | [Gap identified] | [Compliance action with deadline]
+KA-[N] | [HIGH/MEDIUM/LOW] | [Compliance item] | [Gap] | [Action with specific deadline and owner]
 
-REGULATORY DATA:
+COMPLIANCE DATA:
 ${data}`,
     },
-    launchradar: {
-      name: 'Launch Radar',
-      icon: '🚀',
+    enrollment: {
+      name: 'Enrollment Monitor',
+      icon: '📊',
       color: '#5B9BD5',
-      desc: 'Reviews pending product launches for hr risk. Assesses privacy, regulatory, IP, and commercial exposure before go-live.',
+      desc: 'Tracks mandatory training and benefits enrollment completion rates by department. Flags departments falling behind targets and recommends nudge strategies.',
       sampleData: SAMPLE_LAUNCH_ITEMS,
-      sampleLabel: '5 product launches pending hr review',
+      sampleLabel: '5 departments with enrollment progress',
       acceptTypes: '.txt,.csv',
-      prompt: (data) => `You are the Launch Radar managed agent. Analyze these pending product launches and produce a hr risk assessment for each. You are reviewing for a multinational technology company.
+      prompt: (data) => `You are the Enrollment Monitor managed agent. Analyze this enrollment/completion data and produce a progress report with intervention recommendations.
 
-Assess each launch for:
-- Privacy/data protection risks (GDPR, CCPA, BIPA, HIPAA)
-- AI/algorithmic risks (EU AI Act, FTC guidance, state laws)
-- Consumer protection risks
-- Employment law risks
-- IP risks
-- Regulatory compliance risks
+Today's date is ${new Date().toISOString().split('T')[0]}.
+
+For each department, assess:
+- Current completion rate vs target (100% for mandatory items)
+- Number of employees not started vs in progress
+- Days remaining until deadline
+- Whether current trajectory will meet the deadline
+- Risk level if deadline is missed
 
 OUTPUT FORMAT:
-## REPORT: Launch Radar — People Risk Assessment
+## REPORT: Enrollment Progress Report — ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
 
-For each launch item:
-🔴 F-[NNN] | HIGH RISK | [Launch ID] — [Product Name]
-REFERENCE: [Launch ID, target date, risk flags identified]
-ISSUE: [Specific hr risk with regulatory citations]
-RECOMMENDED ACTION: "[Specific mitigation — what needs to change before launch, required disclosures, consent mechanisms, etc.]"
+For each department or program:
+🔴 F-[NNN] | HIGH RISK | [Department] — [Program Name]
+REFERENCE: Enrolled: [N]/[Total] ([%]), Not Started: [N], In Progress: [N], Deadline: [date]
+ISSUE: [Why this is at risk — low completion rate, many not started, insufficient time remaining]
+RECOMMENDED ACTION: [Specific intervention — manager escalation, deadline reminder, schedule dedicated time, 1:1 outreach to non-starters]
+
+Use 🔴 for completion <70% with <14 days remaining, 🟡 for 70-85% or moderate time pressure, 🟢 for >85% and on track, 💡 for best practice recommendations.
 
 ## RISK SUMMARY
-Portfolio-level launch risk assessment. Which launches can proceed, which need holds, which need modifications.
+Organization-wide enrollment health — overall completion rate, departments at risk, projected completion by deadline.
 
 ## KEY ACTIONS
-KA-[N] | [HIGH/MEDIUM/LOW] | [Launch ID] | [Risk area] | [Required action before launch with specific recommendation]
+KA-[N] | [HIGH/MEDIUM/LOW] | [Department] | [Gap] | [Specific nudge action with owner and timeline]
 
-LAUNCH DATA:
+ENROLLMENT DATA:
 ${data}`,
     },
   };
@@ -1078,7 +1092,7 @@ ${data}`,
                       {isReport(agentResults[id].text) ? (
                         <div className="report-card" style={{ margin: 0, border: 'none' }}>
                           <div className="report-header" style={{ borderRadius: 0 }}>
-                            <span className="report-icon">⚖</span>
+                            <span className="report-icon">👥</span>
                             <span className="report-title">{(agentResults[id].text.match(/##\s*REPORT:\s*(.+)/i) || [,'Agent Report'])[1]}</span>
                             <div className="report-header-actions">
                               <button className="btn-export btn-export-primary" onClick={() => exportReport(agentResults[id].text, 'view')}>🔍 Full Report</button>
@@ -1314,14 +1328,14 @@ ${data}`,
             {/* Chat */}
             <div className="chat-main">
               <div className="chat-header">
-                <span className="chat-title">⚖ HR AI Assistant</span>
+                <span className="chat-title">👥 HR AI Assistant</span>
                 {msgs.length > 0 && <button className="btn btn-ghost btn-sm" onClick={() => setMsgs([])}>Clear Chat</button>}
               </div>
 
               <div className="chat-messages">
                 {msgs.length === 0 && (
                   <div className="chat-empty">
-                    <div className="empty-icon">⚖</div>
+                    <div className="empty-icon">👥</div>
                     <div className="empty-title">HR AI Assistant Ready</div>
                     <p className="empty-desc">
                       Ask about any hr topic, IP, or any HR topic.
@@ -1350,7 +1364,7 @@ ${data}`,
                       <div className="report-card">
                         {/* Report Header with Download Buttons */}
                         <div className="report-header">
-                          <span className="report-icon">⚖</span>
+                          <span className="report-icon">👥</span>
                           <span className="report-title">{(m.text.match(/##\s*REPORT:\s*(.+)/i) || [,'People Analysis Report'])[1]}</span>
                           <div className="report-header-actions">
                             <button className="btn-export btn-export-primary" onClick={() => exportReport(m.text, 'view')}>🔍 Full Report</button>
@@ -1587,7 +1601,7 @@ ${data}`,
                 </div>
                 <div className="guide-card-body">
                   <p className="guide-what"><strong>What is it?</strong></p>
-                  <p>Managed Agents are autonomous AI workers that run in the background without human prompting. Unlike skills (which you activate manually), managed agents watch, monitor, and alert your team automatically — like having a tireless junior associate who never sleeps.</p>
+                  <p>Managed Agents are autonomous AI workers that run in the background without human prompting. Unlike skills (which you activate manually), managed agents watch, monitor, and alert your team automatically — like having a tireless HR coordinator who never sleeps.</p>
                   <p className="guide-what"><strong>How they work:</strong></p>
                   <p>You configure a managed agent once (what to watch, how often, who to alert), and it runs on a schedule. When it finds something that needs attention, it delivers a structured report to your team.</p>
                   <p className="guide-what"><strong>The 5 Managed Agents:</strong></p>
@@ -1597,7 +1611,7 @@ ${data}`,
                     ))}
                   </div>
                   <p className="guide-what"><strong>Example in practice:</strong></p>
-                  <p>The <strong>Renewal Watcher</strong> scans your 2,400 contracts every night. On Monday morning, your team gets a report: "3 contracts auto-renew this month — Contract A has a cancel-by date of March 15, Contract B needs a 60-day notice by March 1." No one had to remember to check.</p>
+                  <p>The <strong>Attrition Risk Scanner</strong> scores your workforce for flight risk every week. On Monday morning, your HRBP team gets a report: "3 high-performers flagged as critical flight risk — Sarah in Engineering has a competing offer rumored, Raj's compa-ratio is 0.78, and Mike hasn't been promoted in 4 years." No one had to remember to check.</p>
                 </div>
               </div>
 
