@@ -1,162 +1,20 @@
 export const SAMPLE_DOCS = [
   {
-    name: "Mutual Non-Disclosure Agreement",
-    type: "contract",
-    filename: "Sample-Mutual-NDA.txt",
-    content: `MUTUAL NON-DISCLOSURE AGREEMENT
-
-This Mutual Non-Disclosure Agreement ("Agreement") is entered into as of [DATE] by and between:
-
-Party A: [COMPANY NAME], a [STATE] corporation ("Disclosing Party")
-Party B: [COUNTERPARTY NAME], a [STATE] corporation ("Receiving Party")
-
-WHEREAS, the parties wish to explore a potential business relationship ("Purpose") and in connection therewith may disclose Confidential Information to each other.
-
-1. DEFINITION OF CONFIDENTIAL INFORMATION
-"Confidential Information" means all non-public information disclosed by either party, whether orally, in writing, or by inspection, including but not limited to: trade secrets, business plans, financial data, customer lists, technical specifications, source code, algorithms, and proprietary methodologies.
-
-2. OBLIGATIONS OF RECEIVING PARTY
-The Receiving Party shall: (a) hold Confidential Information in strict confidence; (b) not disclose to any third party without prior written consent; (c) use Confidential Information solely for the Purpose; (d) limit access to employees and advisors with a need to know who are bound by confidentiality obligations no less restrictive than this Agreement.
-
-3. EXCLUSIONS
-Confidential Information does not include information that: (a) is or becomes publicly available through no fault of the Receiving Party; (b) was in the Receiving Party's possession prior to disclosure; (c) is independently developed without use of Confidential Information; (d) is rightfully received from a third party without restriction.
-
-4. TERM AND SURVIVAL
-This Agreement shall remain in effect for two (2) years from the Effective Date. The obligations of confidentiality shall survive for three (3) years following the expiration or termination of this Agreement.
-
-5. RETURN OF MATERIALS
-Upon written request or termination, the Receiving Party shall promptly return or destroy all Confidential Information and certify such destruction in writing.
-
-6. REMEDIES
-The parties acknowledge that breach may cause irreparable harm for which monetary damages would be inadequate. The Disclosing Party shall be entitled to seek equitable relief, including injunction and specific performance, in addition to other remedies.
-
-7. GOVERNING LAW
-This Agreement shall be governed by the laws of the State of [STATE], without regard to conflict of laws principles.
-
-8. MISCELLANEOUS
-(a) Entire Agreement. This constitutes the entire agreement regarding confidentiality and supersedes all prior understandings.
-(b) Amendment. Modifications must be in writing signed by both parties.
-(c) Severability. If any provision is unenforceable, the remainder shall continue in full force.
-(d) No Waiver. Failure to enforce any right shall not constitute a waiver.
-
-IN WITNESS WHEREOF, the parties have executed this Agreement as of the date first above written.
-
-PARTY A: _________________________    PARTY B: _________________________
-Name:                                  Name:
-Title:                                 Title:
-Date:                                  Date:`,
-  },
-  {
-    name: "DSAR Response Template",
-    type: "privacy",
-    filename: "Sample-DSAR-Response.txt",
-    content: `DATA SUBJECT ACCESS REQUEST (DSAR) RESPONSE TEMPLATE
-
-Reference: DSAR-2026-[NUMBER]
-Date Received: [DATE]
-Response Due: [DATE + 30 DAYS / 45 DAYS WITH EXTENSION]
-Data Subject: [NAME]
-Status: [ ] Acknowledged  [ ] Identity Verified  [ ] Processing  [ ] Complete
-
-SECTION 1: IDENTITY VERIFICATION
-[ ] Government-issued ID reviewed
-[ ] Identity confirmed against records
-[ ] Verification notes: _______________
-
-SECTION 2: SCOPE OF REQUEST
-The data subject has requested:
-[ ] Access to personal data (Art. 15 GDPR / CCPA 1798.100)
-[ ] Rectification (Art. 16 GDPR)
-[ ] Erasure / Deletion (Art. 17 GDPR / CCPA 1798.105)
-[ ] Restriction of processing (Art. 18 GDPR)
-[ ] Data portability (Art. 20 GDPR)
-[ ] Objection to processing (Art. 21 GDPR)
-[ ] Opt-out of sale/sharing (CCPA 1798.120)
-
-SECTION 3: DATA INVENTORY
-Systems searched:
-[ ] CRM (Salesforce)      - Records found: Y/N
-[ ] HRIS (Workday)        - Records found: Y/N
-[ ] Marketing (HubSpot)   - Records found: Y/N
-[ ] Support (Zendesk)     - Records found: Y/N
-[ ] Analytics (Mixpanel)  - Records found: Y/N
-[ ] Email archives        - Records found: Y/N
-[ ] Backup systems        - Records found: Y/N
-
-SECTION 4: EXEMPTIONS APPLIED
-[ ] Legal privilege (attorney-client communications excluded)
-[ ] Third-party personal data redacted
-[ ] Trade secrets / IP redacted
-[ ] Ongoing investigation exception
-[ ] None - full disclosure
-
-SECTION 5: RESPONSE LETTER
-[Draft response to data subject with findings, any exemptions applied, and information about the right to lodge a complaint with the supervisory authority.]
-
-SECTION 6: INTERNAL NOTES (PRIVILEGED)
-[Notes for legal team only - not disclosed to data subject]`,
-  },
-  {
-    name: "Legal Hold Notice",
-    type: "litigation",
-    filename: "Sample-Legal-Hold-Notice.txt",
-    content: `LEGAL HOLD NOTICE - PRIVILEGED & CONFIDENTIAL
-
-TO: [CUSTODIAN NAME(S)]
-FROM: [LEGAL DEPARTMENT / OUTSIDE COUNSEL]
-DATE: [DATE]
-RE: Preservation Obligation - [MATTER NAME / NUMBER]
-
-PLEASE READ THIS ENTIRE NOTICE CAREFULLY.
-YOUR IMMEDIATE ACTION IS REQUIRED.
-
-PURPOSE
-[Company] reasonably anticipates litigation, a regulatory investigation, or an audit related to [brief, non-privileged description]. You have been identified as a person likely to possess documents or information relevant to this matter.
-
-EFFECTIVE IMMEDIATELY, you must preserve all documents, communications, and electronically stored information ("ESI") that may be relevant.
-
-WHAT TO PRESERVE
-You must preserve ALL documents and ESI related to:
-- [Topic 1 - e.g., "Project Atlas and all communications regarding its development"]
-- [Topic 2 - e.g., "Communications with [counterparty] from January 2024 to present"]
-- [Topic 3 - e.g., "Financial records and projections related to [product/service]"]
-
-This includes but is not limited to:
-- Emails (including drafts, deleted items, and attachments)
-- Text messages, Slack messages, Teams chats
-- Documents (Word, Excel, PowerPoint, PDFs)
-- Calendar entries and meeting notes
-- Voicemails
-- Personal devices used for company business
-- Cloud storage (Google Drive, Dropbox, OneDrive)
-- Social media posts and direct messages
-
-WHAT YOU MUST DO
-1. STOP all routine deletion of potentially relevant materials
-2. DISABLE auto-delete on email and messaging platforms
-3. PRESERVE all relevant documents in their current location
-4. DO NOT alter, modify, or reformat any documents
-5. CONTACT Legal immediately if you have questions
-
-WHAT YOU MUST NOT DO
-- Do not delete any potentially relevant documents
-- Do not move files to different locations without Legal approval
-- Do not discuss this hold with persons outside the company
-- Do not modify metadata or file properties
-
-DURATION
-This hold remains in effect until you receive written notice of release from the Legal Department.
-
-ACKNOWLEDGMENT REQUIRED
-Please confirm receipt by responding to [legal@company.com] within 48 hours:
-[ ] I have read and understand this Legal Hold Notice
-[ ] I will preserve all relevant documents and ESI
-[ ] I have identified relevant material sources: [list]
-
-Failure to comply may result in severe legal consequences including adverse inference instructions, monetary sanctions, and spoliation findings.
-
-This notice is protected by attorney-client privilege and the work product doctrine.`,
-  },
+    name: "Sample Job Description",
+    type: "talent",
+    filename: "Sample-Job-Description.txt",
+    content: "JOB DESCRIPTION\n\nTitle: Senior Software Engineer\nDepartment: Engineering\nReports To: VP of Engineering\nLocation: Remote (US-based)\nFLSA Status: Exempt\n\nSummary:\nWe are seeking a Senior Software Engineer to design and build scalable backend services. You will lead technical design decisions and mentor junior engineers.\n\nEssential Functions:\n- Design and implement microservices using Go or Python\n- Lead code reviews and establish engineering best practices\n- Collaborate with product managers to define technical requirements\n- Mentor junior engineers through pairing and design reviews\n- Participate in on-call rotation (1 week per 6 weeks)\n\nRequirements:\n- 5+ years software engineering experience\n- Proficiency in Go, Python, or Java\n- Experience with distributed systems and cloud platforms\n- Strong communication skills\n\nPreferred:\n- Experience with Kubernetes and Docker\n- Contributions to open-source projects\n- Experience at a high-growth startup\n\nCompensation: $170,000 - $210,000 base + equity + benefits\n\nEEO Statement: We are an equal opportunity employer.",
+  },  {
+    name: "Sample Performance Review",
+    type: "performance",
+    filename: "Sample-Performance-Review.txt",
+    content: "ANNUAL PERFORMANCE REVIEW\n\nEmployee: Sarah Johnson\nTitle: Product Manager\nReview Period: Jan 1 - Dec 31, 2025\nReviewer: Michael Chen, Director of Product\n\nOverall Rating: Exceeds Expectations (4/5)\n\nGoal Achievement:\n1. Launch v3.0 mobile app (Target: Q2) \u2014 Achieved Q2, 4.6 app store rating\n2. Increase user retention by 15% \u2014 Achieved 18% improvement\n3. Reduce support tickets by 20% \u2014 Achieved 12% (partially met)\n4. Mentor 2 associate PMs \u2014 Completed, both promoted\n\nStrengths:\n- Exceptional stakeholder management across engineering, design, and sales\n- Data-driven decision making with clear success metrics\n- Strong mentorship and team development\n\nDevelopment Areas:\n- Could improve estimation accuracy for complex projects\n- Opportunity to develop executive presentation skills\n\nRecommendation: Promote to Senior Product Manager in Q2 2026",
+  },  {
+    name: "Sample Employee Handbook Section",
+    type: "compliance",
+    filename: "Sample-Employee-Handbook-Section.txt",
+    content: "EMPLOYEE HANDBOOK \u2014 SECTION 7: TIME OFF & LEAVE\n\nEffective: January 1, 2026\n\n7.1 PAID TIME OFF (PTO)\nFull-time employees accrue PTO as follows:\n- Years 0-2: 15 days per year (accrued at 1.25 days/month)\n- Years 3-5: 20 days per year\n- Years 6+: 25 days per year\nMaximum accrual: 1.5x annual allotment. PTO is paid out at termination in [CA, CO, IL, MT, NE].\n\n7.2 SICK LEAVE\nAll employees receive 5 paid sick days per year. Unused sick time does not carry over. [Note: State-specific requirements may provide additional sick leave.]\n\n7.3 FAMILY AND MEDICAL LEAVE\nEligible employees may take up to 12 weeks of unpaid, job-protected leave under FMLA. Eligibility: 12 months of service, 1,250 hours worked.\n\n7.4 PARENTAL LEAVE\nPrimary caregiver: 16 weeks paid. Secondary caregiver: 6 weeks paid. Must be taken within 12 months of birth/adoption.\n\n7.5 BEREAVEMENT\nImmediate family: 5 days paid. Extended family: 3 days paid.",
+  }
 ];
 
 export const VULN_REPORT = [

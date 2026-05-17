@@ -349,11 +349,9 @@
 .report-item-ref { font-size: 12px; color: #7B8CDE; font-family: var(--font-body); margin: 4px 0 8px; padding-left: 2px; }
 .report-item-issue { font-size: 13px; color: var(--text-body); font-family: var(--font-body); line-height: 1.6; margin-bottom: 8px; }
 .report-item-issue strong { color: var(--text-primary); }
-.report-item-current, .report-item-recommended { font-size: 13px; font-family: var(--font-body); line-height: 1.6; padding: 8px 12px; border-radius: 6px; margin: 4px 0; }
-.report-item-current { background: rgba(220,38,38,0.06); border: 1px solid rgba(220,38,38,0.15); }
+.report-item-recommended { font-size: 13px; font-family: var(--font-body); line-height: 1.6; padding: 8px 12px; border-radius: 6px; margin: 4px 0; }
 .report-item-recommended { background: rgba(5,150,105,0.06); border: 1px solid rgba(5,150,105,0.15); }
 .wording-label { font-weight: 700; font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase; margin-right: 6px; }
-.report-item-current .wording-label { color: #F87171; }
 .report-item-recommended .wording-label { color: #6EE7B7; }
 .wording-quote { color: var(--text-muted); font-style: italic; }
 

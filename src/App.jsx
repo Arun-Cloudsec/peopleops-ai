@@ -51,7 +51,7 @@ function parseReport(text) {
       if (oldMatch) {
         if (currentItem) items.push(currentItem);
         const typeMap = { '🔴': 'high', '🟡': 'medium', '🟢': 'low', '💡': 'rec', '📋': 'finding' };
-        currentItem = { type: typeMap[oldMatch[1]] || 'finding', num: '', title: oldMatch[2].split('—')[0]?.trim(), body: oldMatch[2], reference: '', issue: '', currentWording: '', recommendedWording: '' };
+        currentItem = { type: typeMap[oldMatch[1]] || 'finding', num: '', title: oldMatch[2].split('—')[0]?.trim(), body: oldMatch[2], reference: '', issue: '',  recommendedWording: '' };
       } else if (currentItem && t) {
         currentItem.body += ' ' + t;
       }
@@ -71,7 +71,7 @@ function parseReport(text) {
     const title = sectionTitle.slice(1).join('—').trim() || section;
 
     const getField = (label) => {
-      const rx = new RegExp(label + ':\\s*(.+?)(?=\\n(?:REFERENCE|ISSUE|CURRENT WORDING|RECOMMENDED WORDING|🔴|🟡|🟢|💡|📋|##|---|$))', 's');
+      const rx = new RegExp(label + ':\\s*(.+?)(?=\\n(?:REFERENCE|ISSUE|RECOMMENDED ACTION|RECOMMENDED ACTION|🔴|🟡|🟢|💡|📋|##|---|$))', 's');
       const m = block.match(rx);
       return m ? m[1].trim().replace(/^[""]|[""]$/g, '') : '';
     };
@@ -83,9 +83,9 @@ function parseReport(text) {
       section,
       reference: getField('REFERENCE'),
       issue: getField('ISSUE'),
-      currentWording: getField('CURRENT WORDING'),
-      recommendedWording: getField('RECOMMENDED WORDING'),
-      body: getField('ISSUE') || block.split('\n').slice(1).map(l => l.trim()).filter(l => l && !l.match(/^(REFERENCE|ISSUE|CURRENT WORDING|RECOMMENDED WORDING):/)).join(' '),
+      
+      recommendedWording: getField('RECOMMENDED ACTION'),
+      body: getField('ISSUE') || block.split('\n').slice(1).map(l => l.trim()).filter(l => l && !l.match(/^(REFERENCE|ISSUE|RECOMMENDED ACTION|RECOMMENDED ACTION):/)).join(' '),
     });
   }
   return items;
@@ -194,7 +194,7 @@ body{font-family:Calibri,'Segoe UI',sans-serif;color:#1B2A4A;line-height:1.5}
 <!-- PAGE 1: TITLE -->
 <div class="title-page">
 <h1>⚖ PEOPLEOPS AI</h1>
-<div style="font-size:13px;letter-spacing:3px;color:#64748b;margin-bottom:40px">LEGAL INTELLIGENCE PLATFORM</div>
+<div style="font-size:13px;letter-spacing:3px;color:#64748b;margin-bottom:40px">HR INTELLIGENCE PLATFORM</div>
 <h2>${title}</h2>
 <div class="meta-row">
 <span>📅 ${ts}</span>
@@ -202,8 +202,8 @@ body{font-family:Calibri,'Segoe UI',sans-serif;color:#1B2A4A;line-height:1.5}
 <span>🔴 ${counts.high} High Risk</span>
 <span>🟡 ${counts.medium} Medium Risk</span>
 </div>
-<div class="classification">CONFIDENTIAL — ATTORNEY WORK PRODUCT</div>
-<div class="org">PeopleOps AI — HR Intelligence Platform | Draft for Attorney Review</div>
+<div class="classification">CONFIDENTIAL — HR WORK PRODUCT</div>
+<div class="org">PeopleOps AI — HR Intelligence Platform | Draft for HR Leadership Review</div>
 </div>
 
 <!-- PAGE 2: DASHBOARD -->
@@ -234,7 +234,7 @@ ${kas.map(ka => `<tr class="ka-${ka.severity.toLowerCase().includes('high') ? 'h
 <div class="page-break"></div>
 <div class="findings">
 <h2>Detailed Findings (${totalFindings})</h2>
-${items.map((item, idx) => `<div class="item item-${item.type}"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span class="badge" style="background:${sevColors[item.type]}">${sevLabels[item.type]}</span><span style="font-size:12px;color:#C9A84C;font-weight:700;font-family:monospace">${item.num || 'F-' + String(idx+1).padStart(3,'0')}</span></div><h3>${item.title}</h3>${item.reference ? '<p style="font-size:12px;color:#5B9BD5;margin:2px 0">📌 ' + item.section + (item.reference ? ' — ' + item.reference : '') + '</p>' : ''}${item.issue ? '<p style="margin:6px 0"><strong>Issue:</strong> ' + item.issue + '</p>' : (item.body ? '<p>' + item.body + '</p>' : '')}${item.currentWording ? '<div style="background:#FEF2F2;padding:8px 12px;border-radius:6px;border-left:3px solid #DC2626;margin:6px 0;font-size:13px"><strong style="color:#DC2626">⛔ Current Wording:</strong> <em>"' + item.currentWording + '"</em></div>' : ''}${item.recommendedWording ? '<div style="background:#ECFDF5;padding:8px 12px;border-radius:6px;border-left:3px solid #059669;margin:6px 0;font-size:13px"><strong style="color:#059669">✅ Recommended Wording:</strong> <em>"' + item.recommendedWording + '"</em></div>' : ''}</div>`).join('')}
+${items.map((item, idx) => `<div class="item item-${item.type}"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span class="badge" style="background:${sevColors[item.type]}">${sevLabels[item.type]}</span><span style="font-size:12px;color:#C9A84C;font-weight:700;font-family:monospace">${item.num || 'F-' + String(idx+1).padStart(3,'0')}</span></div><h3>${item.title}</h3>${item.reference ? '<p style="font-size:12px;color:#5B9BD5;margin:2px 0">📌 ' + item.section + (item.reference ? ' — ' + item.reference : '') + '</p>' : ''}${item.issue ? '<p style="margin:6px 0"><strong>Issue:</strong> ' + item.issue + '</p>' : (item.body ? '<p>' + item.body + '</p>' : '')}${item.recommendedWording ? '<div style="background:#ECFDF5;padding:8px 12px;border-radius:6px;border-left:3px solid #059669;margin:6px 0;font-size:13px"><strong style="color:#059669">✅ Recommended Action:</strong> <em>"' + item.recommendedWording + '"</em></div>' : ''}</div>`).join('')}
 </div>
 <div class="footer">CONFIDENTIAL — Draft for HR leadership review — not HR advice<br>PeopleOps AI — HR Intelligence Platform | Generated ${ts}</div>
 </body></html>`;
@@ -277,9 +277,9 @@ th{background:#1B2A4A;color:white;font-weight:700;text-align:left}
 </style></head><body>
 <div style="text-align:center;margin:60px 0 40px">
 <h1 style="border:none;font-size:32px;margin-bottom:4px">⚖ PEOPLEOPS AI</h1>
-<p style="letter-spacing:3px;color:#64748b;font-size:12px;margin-bottom:24px">LEGAL INTELLIGENCE PLATFORM</p>
+<p style="letter-spacing:3px;color:#64748b;font-size:12px;margin-bottom:24px">HR INTELLIGENCE PLATFORM</p>
 <h2 style="border:none;font-size:24px">${title}</h2>
-<p style="color:#64748b;font-size:14px;margin-top:12px">${ts} | CONFIDENTIAL — Attorney Work Product</p>
+<p style="color:#64748b;font-size:14px;margin-top:12px">${ts} | CONFIDENTIAL — HR Work Product</p>
 </div>
 <br style="page-break-before:always">
 <h2>Executive Dashboard</h2>
@@ -295,7 +295,7 @@ ${(() => { const kas = parseKeyActions(text); return kas.length > 0 ? `<h3>Key A
 <h2>Detailed Findings (${totalFindings})</h2>
 <table>
 <tr><th style="width:60px">#</th><th style="width:90px">Severity</th><th style="width:160px">Finding</th><th style="width:160px">Reference</th><th>Issue & Recommendation</th></tr>
-${items.map((item, idx) => `<tr class="${item.type}"><td style="font-weight:700;color:#C9A84C;font-family:monospace">${item.num || 'F-' + String(idx+1).padStart(3,'0')}</td><td><span class="badge" style="background:${sevColors[item.type]}">${sevLabels[item.type]}</span></td><td style="font-weight:700">${item.title}</td><td style="font-size:12px;color:#5B9BD5">${item.section || ''}${item.reference ? '<br>' + item.reference : ''}</td><td>${item.issue || item.body}${item.currentWording ? '<br><br><strong style="color:#DC2626">⛔ Current:</strong> <em>' + item.currentWording + '</em>' : ''}${item.recommendedWording ? '<br><strong style="color:#059669">✅ Recommended:</strong> <em>' + item.recommendedWording + '</em>' : ''}</td></tr>`).join('')}
+${items.map((item, idx) => `<tr class="${item.type}"><td style="font-weight:700;color:#C9A84C;font-family:monospace">${item.num || 'F-' + String(idx+1).padStart(3,'0')}</td><td><span class="badge" style="background:${sevColors[item.type]}">${sevLabels[item.type]}</span></td><td style="font-weight:700">${item.title}</td><td style="font-size:12px;color:#5B9BD5">${item.section || ''}${item.reference ? '<br>' + item.reference : ''}</td><td>${item.issue || item.body}${item.recommendedWording ? '<br><strong style="color:#059669">✅ Recommended Action:</strong> <em>' + item.recommendedWording + '</em>' : ''}</td></tr>`).join('')}
 </table>
 <hr style="border:none;border-top:2px solid #C9A84C;margin-top:40px">
 <p style="text-align:center;font-size:11px;color:#94a3b8">Draft for HR leadership review — not HR advice | PeopleOps AI | ${ts}</p>
@@ -306,10 +306,10 @@ ${items.map((item, idx) => `<tr class="${item.type}"><td style="font-weight:700;
   // ═══ EXCEL — CSV with structured data ═══
   if (format === 'csv') {
     const sevMap = { high: 'HIGH', medium: 'MEDIUM', low: 'LOW', rec: 'RECOMMENDATION', finding: 'INFO' };
-    const rows = ['"Finding #","Severity","Priority","Title","Section Reference","Issue","Current Wording","Recommended Wording","Status","Assigned To","Due Date","Report Date"'];
+    const rows = ['"Finding #","Severity","Priority","Title","Section Reference","Issue","Recommended Action","Status","Assigned To","Due Date","Report Date"'];
     items.forEach((item, i) => {
       const priority = item.type === 'high' ? '1-Critical' : item.type === 'medium' ? '2-High' : item.type === 'low' ? '3-Medium' : '4-Low';
-      rows.push(`"${item.num || 'F-' + String(i+1).padStart(3,'0')}","${sevMap[item.type]}","${priority}","${item.title.replace(/"/g, '""')}","${(item.section || '').replace(/"/g, '""')}","${(item.issue || item.body).replace(/"/g, '""')}","${(item.currentWording || '').replace(/"/g, '""')}","${(item.recommendedWording || '').replace(/"/g, '""')}","Open","","","${ts}"`);
+      rows.push(`"${item.num || 'F-' + String(i+1).padStart(3,'0')}","${sevMap[item.type]}","${priority}","${item.title.replace(/"/g, '""')}","${(item.section || '').replace(/"/g, '""')}","${(item.issue || item.body).replace(/"/g, '""')}","${(item.recommendedWording || '').replace(/"/g, '""')}","Open","","","${ts}"`);
     });
     if (summary) rows.push(`"","SUMMARY","","Risk Summary","${summary.replace(/"/g, '""')}","","","","${ts}"`);
     if (actions) rows.push(`"","ACTIONS","","Key Actions","${actions.replace(/"/g, '""').replace(/\n/g, ' ')}","","","","${ts}"`);
@@ -329,12 +329,12 @@ ${items.map((item, idx) => `<tr class="${item.type}"><td style="font-weight:700;
     const s1 = pptx.addSlide();
     s1.background = { fill: NAVY };
     s1.addText('⚖  PEOPLEOPS AI', { x: 0, y: 0.6, w: '100%', h: 0.6, fontSize: 18, color: GOLD, align: 'center', fontFace: 'Calibri', letterSpacing: 4 });
-    s1.addText('LEGAL INTELLIGENCE PLATFORM', { x: 0, y: 1.1, w: '100%', h: 0.4, fontSize: 11, color: '94a3b8', align: 'center', fontFace: 'Calibri', letterSpacing: 5 });
+    s1.addText('HR INTELLIGENCE PLATFORM', { x: 0, y: 1.1, w: '100%', h: 0.4, fontSize: 11, color: '94a3b8', align: 'center', fontFace: 'Calibri', letterSpacing: 5 });
     s1.addShape(pptx.ShapeType.rect, { x: 3, y: 1.8, w: 7.33, h: 0.04, fill: { color: GOLD } });
     s1.addText(title, { x: 1, y: 2.2, w: 11.33, h: 1.2, fontSize: 28, color: 'FFFFFF', align: 'center', fontFace: 'Calibri', bold: true });
     s1.addText(`${ts}  |  ${totalFindings} Findings  |  ${counts.high} High Risk  |  ${counts.medium} Medium Risk`, { x: 0, y: 3.6, w: '100%', h: 0.4, fontSize: 12, color: '94a3b8', align: 'center', fontFace: 'Calibri' });
-    s1.addText('CONFIDENTIAL — ATTORNEY WORK PRODUCT', { x: 0, y: 4.4, w: '100%', h: 0.4, fontSize: 11, color: GOLD, align: 'center', fontFace: 'Calibri', bold: true });
-    s1.addText('Draft for Attorney Review — Not Legal Advice', { x: 0, y: 6.6, w: '100%', h: 0.3, fontSize: 10, color: '64748b', align: 'center', fontFace: 'Calibri', italic: true });
+    s1.addText('CONFIDENTIAL — HR WORK PRODUCT', { x: 0, y: 4.4, w: '100%', h: 0.4, fontSize: 11, color: GOLD, align: 'center', fontFace: 'Calibri', bold: true });
+    s1.addText('Draft for Hr Leadership Review — Not Hr Advice', { x: 0, y: 6.6, w: '100%', h: 0.3, fontSize: 10, color: '64748b', align: 'center', fontFace: 'Calibri', italic: true });
 
     // Slide 2: Dashboard
     const s2 = pptx.addSlide();
@@ -413,14 +413,14 @@ h1{color:#16213e;border-bottom:3px solid #c9a84c;padding-bottom:12px}
 .time{font-size:11px;color:#999;margin-top:8px}
 .footer{margin-top:40px;padding-top:20px;border-top:1px solid #ddd;font-size:12px;color:#999;text-align:center}
 </style></head><body>
-<h1>⚖ PeopleOps AI — Legal Session Export</h1>
+<h1>⚖ PeopleOps AI — HR Session Export</h1>
 <p style="color:#666">Generated: ${ts} | Messages: ${messages.length}</p>
 ${messages.map(m => `<div class="msg ${m.role}"><div class="role">${m.role === 'user' ? '👤 You' : '⚖ HR AI'}</div><div>${m.text.replace(/\n/g, '<br>')}</div><div class="time">${m.time?.toLocaleString() || ''}</div></div>`).join('')}
 <div class="footer">PeopleOps AI — HR Intelligence Platform | Draft for HR leadership review only</div>
 </body></html>`;
     downloadBlob(new Blob([html], { type: 'text/html' }), `lexicon-session-${ts}.html`);
   } else if (format === 'txt') {
-    const txt = `PEOPLEOPS AI — LEGAL SESSION EXPORT\nDate: ${ts}\n${'═'.repeat(60)}\n\n${content}\n\n${'═'.repeat(60)}\nDraft for HR leadership review only.`;
+    const txt = `PEOPLEOPS AI — HR SESSION EXPORT\nDate: ${ts}\n${'═'.repeat(60)}\n\n${content}\n\n${'═'.repeat(60)}\nDraft for HR leadership review only.`;
     downloadBlob(new Blob([txt], { type: 'text/plain' }), `lexicon-session-${ts}.txt`);
   } else if (format === 'csv') {
     const csv = 'Role,Message,Timestamp\n' + messages.map(m =>
@@ -491,17 +491,17 @@ OUTPUT FORMAT — use these exact markers. The UI parses them into a structured 
 For EACH finding, use this EXACT multi-line format (all 5 lines required):
 
 🔴 F-[NNN] | HIGH RISK | [Section Reference] — [Short Title]
-REFERENCE: [Section number, clause title, and specific paragraph/subsection location]
+REFERENCE: [Section number, section title, and specific paragraph/subsection location]
 ISSUE: [Clear description of the risk, referencing specific language from the document]
-CURRENT WORDING: "[Quote the exact problematic language from the document]"
-RECOMMENDED WORDING: "[Provide specific replacement language the HR team can adopt or reject]"
+
+RECOMMENDED ACTION: "[Provide specific replacement language the HR team can adopt or reject]"
 
 Use 🔴 for HIGH RISK, 🟡 for MEDIUM RISK, 🟢 for LOW RISK, 💡 for RECOMMENDATION, 📋 for FINDING.
 Number findings sequentially: F-001, F-002, F-003, etc.
-Every finding MUST include all 5 lines. For recommendations, CURRENT WORDING can be "N/A" and RECOMMENDED WORDING contains the suggested addition.
+Every finding MUST include all 3 lines.
 
 ## RISK SUMMARY
-Write a professional executive summary (3-4 sentences): overall risk posture, the most critical exposure areas, and a clear accept/reject/negotiate recommendation. Include a one-line risk rating like "Overall Risk Rating: HIGH — significant commercial and legal exposure requiring negotiation before execution."
+Write a professional executive summary (3-4 sentences): overall risk posture, the most critical exposure areas, and a clear accept/reject/negotiate recommendation. Include a one-line risk rating like "Overall Risk Rating: HIGH — significant commercial and hr risk exposure requiring negotiation before execution."
 
 ## KEY ACTIONS
 For each action use this exact format:
@@ -513,9 +513,9 @@ End with exactly: ---
 Draft for HR leadership review — not HR advice.
 
 QUALITY RULES:
-- Quote EXACT language from the document in CURRENT WORDING fields
-- RECOMMENDED WORDING must be specific enough to copy-paste into a redline
-- Reference section numbers, clause titles, and subsection identifiers
+- Focus on identifying gaps, discrepancies, and risks
+- RECOMMENDED ACTION must be specific enough for the HR team to act on
+- Reference section numbers, section titles, and subsection identifiers
 - Include dollar amounts, dates, percentages when present in the document
 - Be precise: "Section 7.3, paragraph 2" not just "the IP section"
 
@@ -634,20 +634,20 @@ ${files.length > 0 ? 'Documents provided inline. Analyze fully.' : ''}`;
 You are comparing a VENDOR/CUSTOMER DOCUMENT against the ORGANIZATION'S STANDARD/PLAYBOOK.
 
 RULES:
-1. Go clause by clause through the vendor document
-2. Compare each clause against the org standard
-3. Identify: missing clauses, non-compliant language, weaker protections, missing definitions, unfavorable terms
+1. Go section by section through the vendor document
+2. Compare each section against the org standard
+3. Identify: gaps, non-compliant language, weaker protections, missing requirements, unfavorable terms
 4. For each finding, provide the EXACT current wording and your RECOMMENDED replacement wording
 
 OUTPUT FORMAT:
 ## REPORT: Document Comparison — ${vendorDoc.name} vs ${orgDoc.name}
 
 For each finding use this exact format:
-🔴 F-[NNN] | HIGH RISK | [Section/Clause] — [Short Title]
-REFERENCE: [Section number and clause title in the vendor document]
+🔴 F-[NNN] | HIGH RISK | [Section] — [Short Title]
+REFERENCE: [Section number and section title in the vendor document]
 ISSUE: [What's wrong — missing from vendor doc, non-compliant, weaker than org standard, etc.]
-CURRENT WORDING: "[Exact quote from the vendor/customer document]"
-RECOMMENDED WORDING: "[Specific replacement language aligned with org standard that the team can accept or reject]"
+
+RECOMMENDED ACTION: "[Specific replacement language aligned with org standard that the team can accept or reject]"
 
 Severity guide:
 🔴 HIGH RISK — Material deviation from org standard, missing critical protections, non-compliant terms
@@ -676,7 +676,7 @@ ORGANIZATION STANDARD/PLAYBOOK: "${orgDoc.name}"
 ${orgDoc.content}
 --- DOCUMENT END ---
 
-Compare the vendor document against the organization standard. Identify every deviation, missing clause, non-compliant term, and weaker protection. Provide specific replacement wording for each finding.`;
+Compare the vendor document against the organization standard. Identify every deviation, gap, non-compliant term, and weaker protection. Provide a specific recommended action for each finding.`;
 
     try {
       const text = await chatAPI({ messages: [{ role: 'user', content: prompt }], system: compareSys });
@@ -714,8 +714,7 @@ For each contract needing attention, use:
 🔴 F-[NNN] | HIGH RISK | [Contract ID] — [Title]
 REFERENCE: Contract [ID], [Vendor], expires [date], auto-renew: [Y/N], cancel notice: [days]
 ISSUE: [What's happening — approaching deadline, missed cancel window, etc.]
-CURRENT WORDING: "[Contract value and current terms]"
-RECOMMENDED WORDING: "[Specific action to take — cancel, renegotiate, extend, etc. with timeline]"
+RECOMMENDED ACTION: "[Specific action to take — cancel, renegotiate, extend, etc. with timeline]"
 
 Use 🔴 for urgent (within 30 days or cancel window passed), 🟡 for approaching (30-90 days), 🟢 for monitoring (90+ days), 💡 for recommendations.
 
@@ -745,8 +744,7 @@ For each regulatory item, assess:
 🔴 F-[NNN] | HIGH RISK | [Agency/Regulator] — [Rule Title]
 REFERENCE: [Citation, effective date, comment deadline if applicable]
 ISSUE: [What this regulation requires, who it affects, and why it matters to our business]
-CURRENT WORDING: "[Key requirement or threshold from the regulation]"
-RECOMMENDED WORDING: "[Specific compliance action — policy update, process change, filing required, etc.]"
+RECOMMENDED ACTION: "[Specific compliance action — policy update, process change, filing required, etc.]"
 
 Use 🔴 for immediate action required, 🟡 for planning needed, 🟢 for monitoring, 💡 for strategic recommendations.
 
@@ -763,11 +761,11 @@ ${data}`,
       name: 'Launch Radar',
       icon: '🚀',
       color: '#5B9BD5',
-      desc: 'Reviews pending product launches for legal risk. Assesses privacy, regulatory, IP, and commercial exposure before go-live.',
+      desc: 'Reviews pending product launches for hr risk. Assesses privacy, regulatory, IP, and commercial exposure before go-live.',
       sampleData: SAMPLE_LAUNCH_ITEMS,
-      sampleLabel: '5 product launches pending legal review',
+      sampleLabel: '5 product launches pending hr review',
       acceptTypes: '.txt,.csv',
-      prompt: (data) => `You are the Launch Radar managed agent. Analyze these pending product launches and produce a legal risk assessment for each. You are reviewing for a multinational technology company.
+      prompt: (data) => `You are the Launch Radar managed agent. Analyze these pending product launches and produce a hr risk assessment for each. You are reviewing for a multinational technology company.
 
 Assess each launch for:
 - Privacy/data protection risks (GDPR, CCPA, BIPA, HIPAA)
@@ -778,14 +776,13 @@ Assess each launch for:
 - Regulatory compliance risks
 
 OUTPUT FORMAT:
-## REPORT: Launch Radar — Legal Risk Assessment
+## REPORT: Launch Radar — People Risk Assessment
 
 For each launch item:
 🔴 F-[NNN] | HIGH RISK | [Launch ID] — [Product Name]
 REFERENCE: [Launch ID, target date, risk flags identified]
-ISSUE: [Specific legal risk with regulatory citations]
-CURRENT WORDING: "[Current product/feature description that creates risk]"
-RECOMMENDED WORDING: "[Specific mitigation — what needs to change before launch, required disclosures, consent mechanisms, etc.]"
+ISSUE: [Specific hr risk with regulatory citations]
+RECOMMENDED ACTION: "[Specific mitigation — what needs to change before launch, required disclosures, consent mechanisms, etc.]"
 
 ## RISK SUMMARY
 Portfolio-level launch risk assessment. Which launches can proceed, which need holds, which need modifications.
@@ -809,7 +806,7 @@ ${data}`,
     try {
       const text = await chatAPI({
         messages: [{ role: 'user', content: userPrompt }],
-        system: 'You are a managed legal agent. Follow the output format exactly. Every finding must use the structured F-NNN format with all 5 required lines (header, REFERENCE, ISSUE, CURRENT WORDING, RECOMMENDED WORDING). Be specific and actionable. End with: ---\nDraft for HR leadership review — not HR advice.',
+        system: 'You are a managed HR agent. Follow the output format exactly. Every finding must use the structured F-NNN format with all 3 required lines (header, REFERENCE, ISSUE, RECOMMENDED ACTION). Be specific and actionable. End with: ---\nDraft for HR leadership review — not HR advice.',
       });
       setAgentResults(prev => ({ ...prev, [agentId]: { text, time: new Date(), data: customData ? 'Custom upload' : 'Sample data' } }));
     } catch (err) {
@@ -927,8 +924,8 @@ ${data}`,
 
             <div className="disclaimer">
               <strong>⚠ Important Notice:</strong> Every output from this platform is a draft for HR leadership review — not HR advice,
-              not a legal conclusion, not a substitute for a lawyer. Built with guardrails: source attribution, conservative
-              defaults on privilege, jurisdiction assumptions surfaced, and explicit gates before anything is filed or sent.
+              not an HR conclusion, not a substitute for qualified HR counsel. Built with guardrails: source attribution, conservative
+              defaults on confidentiality, jurisdiction assumptions surfaced, and explicit gates before anything is filed or sent.
             </div>
           </div>
         )}
@@ -989,7 +986,7 @@ ${data}`,
                       .filter(s => !s.tag || s.tag !== 'setup' || search) // hide setup skills unless searching
                       .map(s => (
                         <div key={`${a.id}-${s.id}`} className={`skill-item ${skill?.id === s.id ? 'active' : ''}`}
-                          onClick={() => setSkill(s)}>
+                          onClick={() => { setSkill(s); if (s.workflow) setAgentMode(s.workflow === 'compare' ? 'compare' : 'review'); }}>
                           {(search || !area) && <span className="skill-area-badge" style={{ background: a.color + '22', color: a.color }}>{a.icon} {a.name}</span>}
                           <div className="skill-dot" style={{ background: a.color }} />
                           <div className="skill-info">
@@ -998,7 +995,8 @@ ${data}`,
                           </div>
                           <button className="btn btn-gold btn-sm" onClick={(e) => {
                             e.stopPropagation(); setSkill(s); setTab('agent');
-                            setInput(`Use the "${s.name}" skill: `);
+                            if (s.workflow) setAgentMode(s.workflow === 'compare' ? 'compare' : 'review');
+                            setInput(s.workflow === 'chat' ? '' : `Use the "${s.name}" skill: `);
                           }}>Launch →</button>
                         </div>
                       ))
@@ -1112,7 +1110,6 @@ ${data}`,
                                 </div>
                                 {item.section && <div className="report-item-ref">📌 {item.section}{item.reference ? ` — ${item.reference}` : ''}</div>}
                                 {item.issue && <div className="report-item-issue"><strong>Issue:</strong> {item.issue}</div>}
-                                {item.currentWording && <div className="report-item-current"><span className="wording-label">⛔ Current:</span> <span className="wording-quote">{item.currentWording}</span></div>}
                                 {item.recommendedWording && <div className="report-item-recommended"><span className="wording-label">✅ Recommended:</span> <span className="wording-quote">{item.recommendedWording}</span></div>}
                                 {!item.issue && item.body && <div className="report-item-body">{item.body}</div>}
                               </div>
@@ -1178,7 +1175,7 @@ ${data}`,
               {authError && <div className="auth-error">⚠ Invalid access code. Please try again.</div>}
               <div className="auth-demo-hint">
                 <span className="auth-hint-label">Demo Access</span>
-                <span className="auth-hint-text">Contact your legal operations team for the access code, or explore the platform using the tabs above.</span>
+                <span className="auth-hint-text">Contact your HR operations team for the access code, or explore the platform using the tabs above.</span>
               </div>
             </div>
           </div>
@@ -1194,6 +1191,8 @@ ${data}`,
                   <div className="active-skill-card">
                     <div className="skill-name">{skill.name}</div>
                     <div className="skill-desc">{skill.desc}</div>
+                    {skill.workflow && <div style={{ marginTop: 8, fontSize: 10, letterSpacing: 1, textTransform: "uppercase", color: skill.workflow === "analyze" ? "#C9A84C" : skill.workflow === "compare" ? "#5B9BD5" : skill.workflow === "generate" ? "#6BAF8D" : "#B07CC6" }}>{skill.workflow === "analyze" ? "📄 Analyze" : skill.workflow === "compare" ? "⚖ Compare" : skill.workflow === "generate" ? "✨ Generate" : "💬 Advisory"}</div>}
+                    {skill.inputHint && <div style={{ marginTop: 6, fontSize: 11, color: "#94a3b8", fontStyle: "italic" }}>💡 {skill.inputHint}</div>}
                     <button className="btn btn-ghost btn-sm" onClick={() => setSkill(null)} style={{ marginTop: 10 }}>✕ Clear</button>
                   </div>
                 ) : (
@@ -1205,21 +1204,21 @@ ${data}`,
               <div className="sidebar-section">
                 <div className="mode-tabs">
                   <button className={`mode-tab ${agentMode === 'review' ? 'mode-active' : ''}`} onClick={() => setAgentMode('review')}>
-                    📄 Skill Review
+                    📄 Analyze
                   </button>
                   <button className={`mode-tab ${agentMode === 'compare' ? 'mode-active' : ''}`} onClick={() => setAgentMode('compare')}>
-                    ⚖ Compare & Comply
+                    ⚖ Compare
                   </button>
                 </div>
 
                 {/* MODE 1: SKILL-BASED REVIEW */}
                 {agentMode === 'review' && (
                   <div className="mode-content">
-                    <p className="mode-desc">Upload a document — AI reviews it against the active skill's baseline and best practices.</p>
+                    <p className="mode-desc">{skill?.workflow === "chat" ? "Describe your scenario below — AI provides expert analysis and recommendations." : skill?.workflow === "generate" ? "Upload source data — AI generates the deliverable using the skill's methodology." : "Upload a document — AI reviews it and identifies gaps, risks, and recommendations."}</p>
                     <div className="upload-zone" onClick={() => fileRef.current?.click()}
                       onDragOver={e => e.preventDefault()} onDrop={onDrop}>
                       <div style={{ fontSize: 24, marginBottom: 4 }}>📎</div>
-                      <div className="upload-text">Drop file or click to upload</div>
+                      <div className="upload-text">{skill?.inputHint || "Drop file or click to upload"}</div>
                       <div className="upload-hint">DOCX, TXT, CSV</div>
                     </div>
                     <input ref={fileRef} type="file" multiple style={{ display: 'none' }}
@@ -1241,7 +1240,7 @@ ${data}`,
                 {/* MODE 2: COMPARE & COMPLY */}
                 {agentMode === 'compare' && (
                   <div className="mode-content">
-                    <p className="mode-desc">Upload vendor doc + your org standard. AI compares clause-by-clause and highlights deviations.</p>
+                    <p className="mode-desc">{skill?.inputHint || "Upload two documents — AI compares them and highlights discrepancies."}</p>
 
                     {/* Sample Pairs */}
                     <div className="compare-samples">
@@ -1262,7 +1261,7 @@ ${data}`,
                     {/* Vendor Doc */}
                     <div className={`compare-upload-box ${vendorDoc?.content ? 'compare-loaded' : ''}`}
                       onClick={() => vendorFileRef.current?.click()}>
-                      <span className="compare-label">📄 Their Document</span>
+                      <span className="compare-label">📄 Source Document</span>
                       {vendorDoc ? (
                         <div className="compare-file-info">
                           <span className="compare-file-name">{vendorDoc.name.length > 20 ? vendorDoc.name.slice(0, 20) + '…' : vendorDoc.name}</span>
@@ -1270,7 +1269,7 @@ ${data}`,
                           <span className="compare-remove" onClick={(e) => { e.stopPropagation(); setVendorDoc(null); }}>✕</span>
                         </div>
                       ) : (
-                        <span className="compare-placeholder">Upload vendor/customer document</span>
+                        <span className="compare-placeholder">Upload source document (offer letter, review, policy, etc.)</span>
                       )}
                     </div>
                     <input ref={vendorFileRef} type="file" style={{ display: 'none' }}
@@ -1279,7 +1278,7 @@ ${data}`,
                     {/* Org Doc */}
                     <div className={`compare-upload-box compare-org ${orgDoc?.content ? 'compare-loaded' : ''}`}
                       onClick={() => orgFileRef.current?.click()} style={{ marginTop: 8 }}>
-                      <span className="compare-label">🏢 Your Org Standard</span>
+                      <span className="compare-label">📋 Reference / Standard</span>
                       {orgDoc ? (
                         <div className="compare-file-info">
                           <span className="compare-file-name">{orgDoc.name.length > 20 ? orgDoc.name.slice(0, 20) + '…' : orgDoc.name}</span>
@@ -1287,7 +1286,7 @@ ${data}`,
                           <span className="compare-remove" onClick={(e) => { e.stopPropagation(); setOrgDoc(null); }}>✕</span>
                         </div>
                       ) : (
-                        <span className="compare-placeholder">Upload your org standard/playbook</span>
+                        <span className="compare-placeholder">Upload reference (comp band, policy, benchmark, etc.)</span>
                       )}
                     </div>
                     <input ref={orgFileRef} type="file" style={{ display: 'none' }}
@@ -1325,8 +1324,8 @@ ${data}`,
                     <div className="empty-icon">⚖</div>
                     <div className="empty-title">HR AI Assistant Ready</div>
                     <p className="empty-desc">
-                      Ask about contracts, compliance, litigation strategy, privacy, IP, or any HR topic.
-                      Upload documents for analysis. Select a skill for specialized workflows.
+                      Ask about any hr topic, IP, or any HR topic.
+                      Select a skill for specialized workflows.
                     </p>
                     {apiOk === false && (
                       <div className="api-warning">
@@ -1334,7 +1333,7 @@ ${data}`,
                       </div>
                     )}
                     <div className="quick-prompts">
-                      {['Review this NDA', 'Draft a legal hold notice', 'Triage this DSAR', 'Check marketing claims', 'Worker classification analysis'].map(q => (
+                      {["Review this job description", "Analyze turnover data", "Audit I-9 compliance", "Draft performance review", "Plan onboarding program"].map(q => (
                         <button key={q} className="btn btn-ghost btn-sm" onClick={() => setInput(q)}>{q}</button>
                       ))}
                     </div>
@@ -1387,7 +1386,6 @@ ${data}`,
                               </div>
                               {item.section && <div className="report-item-ref">📌 {item.section}{item.reference ? ` — ${item.reference}` : ''}</div>}
                               {item.issue && <div className="report-item-issue"><strong>Issue:</strong> {item.issue}</div>}
-                              {item.currentWording && <div className="report-item-current"><span className="wording-label">⛔ Current:</span> <span className="wording-quote">{item.currentWording}</span></div>}
                               {item.recommendedWording && <div className="report-item-recommended"><span className="wording-label">✅ Recommended:</span> <span className="wording-quote">{item.recommendedWording}</span></div>}
                               {!item.issue && item.body && <div className="report-item-body">{item.body}</div>}
                             </div>
@@ -1469,7 +1467,7 @@ ${data}`,
                 )}
                 <div className="input-row">
                   <textarea className="chat-textarea" value={input} onChange={e => setInput(e.target.value)}
-                    placeholder="Ask the HR AI assistant anything…" rows={1}
+                    placeholder={skill?.workflow === "chat" && skill?.inputHint ? skill.inputHint : "Ask the HR AI assistant anything…"} rows={1}
                     onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }} />
                   <button className="btn btn-gold" onClick={send} disabled={loading}>Send ▸</button>
                 </div>
@@ -1483,7 +1481,7 @@ ${data}`,
           <div className="fade-wrapper visible">
             <section className="hero-card" style={{ marginBottom: 24 }}>
               <div className="hero-content">
-                <h2 style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8 }}>Sample Legal Documents</h2>
+                <h2 style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8 }}>Sample HR Documents</h2>
                 <p style={{ fontSize: 14, color: 'var(--text-muted)', fontFamily: 'var(--font-body)', lineHeight: 1.6 }}>
                   Download these templates to test the platform. Upload them into the AI Agent for review, triage, and analysis.
                 </p>
@@ -1510,7 +1508,7 @@ ${data}`,
                     }}>⬇ Download</button>
                     <button className="btn btn-ghost" onClick={() => {
                       setTab('agent');
-                      setInput(`Analyze this "${SAMPLE_DOCS[docIdx].name}" document and provide a detailed legal review.`);
+                      setInput(`Analyze this "${SAMPLE_DOCS[docIdx].name}" document and provide a detailed hr review.`);
                     }}>🤖 Analyze with AI</button>
                   </div>
                 </div>
@@ -1527,7 +1525,7 @@ ${data}`,
               <div className="hero-content">
                 <h2 style={{ fontSize: 26, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8 }}>📖 User Guide</h2>
                 <p style={{ fontSize: 15, color: 'var(--text-muted)', fontFamily: 'var(--font-body)', lineHeight: 1.7 }}>
-                  Welcome to PeopleOps AI — your HR team's AI-powered intelligence platform. This guide explains each component in plain language so every stakeholder — lawyers, paralegals, operations staff, and executives — can get the most out of the platform.
+                  Welcome to PeopleOps AI — your HR team's AI-powered intelligence platform. This guide explains each component in plain language so every stakeholder — HR business partners, recruiters, compensation analysts, and executives — can get the most out of the platform.
                 </p>
               </div>
             </section>
@@ -1541,7 +1539,7 @@ ${data}`,
                 </div>
                 <div className="guide-card-body">
                   <p className="guide-what"><strong>What is it?</strong></p>
-                  <p>Practice Areas are the 12 legal domains the platform covers — think of them as departments in a law firm. Each practice area groups related AI capabilities together so you can find the right tool quickly.</p>
+                  <p>Practice Areas are the 16 HR domains the platform covers — think of them as specializations within a people function. Each practice area groups related AI capabilities together so you can find the right tool quickly.</p>
                   <p className="guide-what"><strong>The 12 Practice Areas:</strong></p>
                   <div className="guide-areas-list">
                     {PRACTICE_AREAS.map(a => (
@@ -1567,17 +1565,17 @@ ${data}`,
                 </div>
                 <div className="guide-card-body">
                   <p className="guide-what"><strong>What is it?</strong></p>
-                  <p>AI Skills are specific, pre-built workflows that tell the AI exactly how to handle a particular type of legal task. Think of a skill as giving a new associate a detailed playbook — "when you get an NDA, check these 15 things in this order and flag these 8 red lines."</p>
+                  <p>AI Skills are specific, pre-built workflows that tell the AI exactly how to handle a particular type of hr task. Think of a skill as giving a new team member a detailed playbook — "when you receive a document, check these key items systematically and flag anything requiring attention."</p>
                   <p className="guide-what"><strong>Examples:</strong></p>
                   <div className="guide-examples">
-                    <div className="guide-example"><span className="guide-ex-icon">📝</span><div><strong>NDA Triager</strong><br/>Reads an inbound NDA and classifies it GREEN (auto-approve), YELLOW (minor issues), or RED (needs HR leadership review). Only the hard ones reach a lawyer's desk.</div></div>
+                    <div className="guide-example"><span className="guide-ex-icon">📝</span><div><strong>Job Description Reviewer</strong><br/>Reviews JDs for inclusive language and compliance. Flags GREEN (ready to post), YELLOW (minor edits), or RED (needs HR leadership review). Only flagged items reach the HRBP.</div></div>
                     <div className="guide-example"><span className="guide-ex-icon">🔍</span><div><strong>Vendor Agreement Review</strong><br/>Compares a vendor's contract against your approved playbook. Produces a redline memo showing where the vendor's terms deviate from your positions.</div></div>
-                    <div className="guide-example"><span className="guide-ex-icon">📊</span><div><strong>Deposition Prep</strong><br/>Builds a deposition outline tied to your case theory, with supporting documents and impeachment material organized by topic.</div></div>
-                    <div className="guide-example"><span className="guide-ex-icon">🔒</span><div><strong>DSAR Responder</strong><br/>Drafts Data Subject Access Request responses within regulatory timelines, searches across systems, and applies exemptions.</div></div>
+                    <div className="guide-example"><span className="guide-ex-icon">📊</span><div><strong>Pay Equity Analyzer</strong><br/>Analyzes compensation data for gender, race, and age equity gaps using statistical regression with actionable recommendations.</div></div>
+                    <div className="guide-example"><span className="guide-ex-icon">🔒</span><div><strong>Handbook Compliance Reviewer</strong><br/>Reviews employee handbooks against federal and state law — identifies outdated policies, missing required notices, and compliance gaps.</div></div>
                   </div>
                   <p className="guide-what"><strong>How to use:</strong></p>
                   <p>Select a skill from any Practice Area → it activates in the AI Agent sidebar → upload a document or describe your task → the AI applies that skill's methodology to produce structured, actionable output.</p>
-                  <p>The platform has <strong>{totalSkills} skills</strong> across all practice areas. Each one is designed to save hours of routine legal work while maintaining quality and consistency.</p>
+                  <p>The platform has <strong>{totalSkills} skills</strong> across all practice areas. Each one is designed to save hours of routine hr work while maintaining quality and consistency.</p>
                 </div>
               </div>
 
@@ -1623,9 +1621,9 @@ ${data}`,
                   <p className="guide-what"><strong>Categories:</strong></p>
                   <div className="guide-examples">
                     <div className="guide-example"><span className="guide-ex-icon">📋</span><div><strong>Contract Lifecycle</strong><br/>Ironclad, DocuSign — pull contracts for review, push signed versions back</div></div>
-                    <div className="guide-example"><span className="guide-ex-icon">📁</span><div><strong>Document Management</strong><br/>iManage, Box, Google Drive — search, retrieve, and file legal documents</div></div>
-                    <div className="guide-example"><span className="guide-ex-icon">⚖️</span><div><strong>Litigation & Research</strong><br/>Everlaw, CourtListener, Trellis — monitor dockets, search case law, manage evidence</div></div>
-                    <div className="guide-example"><span className="guide-ex-icon">📌</span><div><strong>Project Management</strong><br/>Slack, Jira, Linear, Asana — route legal requests, track matters, coordinate teams</div></div>
+                    <div className="guide-example"><span className="guide-ex-icon">📁</span><div><strong>Document Management</strong><br/>Workday, ADP, BambooHR — pull employee data, validate records, run reports</div></div>
+                    <div className="guide-example"><span className="guide-ex-icon">⚖️</span><div><strong>HRIS & People Systems</strong><br/>Workday, BambooHR, ADP — pull employee data, manage records, sync HR systems</div></div>
+                    <div className="guide-example"><span className="guide-ex-icon">📌</span><div><strong>Project Management</strong><br/>Slack, Jira, Greenhouse — route HR requests, track candidates, coordinate reviews</div></div>
                   </div>
                   <p className="guide-what"><strong>Security:</strong></p>
                   <p>All MCP connections use encrypted HTTPS channels with authentication. Data flows through secure APIs — the AI never stores credentials, and every action is logged for audit purposes. Your IT security team can review all connection configurations.</p>
@@ -1640,15 +1638,15 @@ ${data}`,
                 </div>
                 <div className="guide-card-body">
                   <p className="guide-what"><strong>What is it?</strong></p>
-                  <p>The AI Agent is the core interface where you interact with Claude — Anthropic's most advanced AI model — to get legal work done. Upload a document, select a skill, and the AI produces a structured analysis with specific findings, wording recommendations, and action items.</p>
+                  <p>The AI Agent is the core interface where you interact with Claude — Anthropic's most advanced AI model — to get hr work done. Upload a document, select a skill, and the AI produces a structured analysis with specific findings, wording recommendations, and action items.</p>
                   <p className="guide-what"><strong>What it produces:</strong></p>
                   <div className="guide-examples">
-                    <div className="guide-example"><span className="guide-ex-icon">📊</span><div><strong>Structured Report Cards</strong><br/>Color-coded findings (🔴 High / 🟡 Medium / 🟢 Low) with numbered finding IDs, section references, current wording quotes, and recommended replacement language</div></div>
+                    <div className="guide-example"><span className="guide-ex-icon">📊</span><div><strong>Structured Report Cards</strong><br/>Color-coded findings (🔴 High / 🟡 Medium / 🟢 Low) with numbered finding IDs, section references, gap analysis, and recommended actions</div></div>
                     <div className="guide-example"><span className="guide-ex-icon">📥</span><div><strong>Downloadable Reports</strong><br/>Export as PDF (with title page + dashboard), Word (.doc), PowerPoint (.pptx), or Excel (.csv) — ready for stakeholder distribution</div></div>
                     <div className="guide-example"><span className="guide-ex-icon">📎</span><div><strong>Document Upload</strong><br/>Drag and drop Word documents (.docx), text files, CSVs, and more. The AI reads the full content and analyzes it immediately.</div></div>
                   </div>
                   <p className="guide-what"><strong>Access:</strong></p>
-                  <p>The AI Agent requires an access code to use. Contact your legal operations team for the code. All other sections (Dashboard, Practice Areas, Documents, User Guide, Security) are freely accessible for browsing.</p>
+                  <p>The AI Agent requires an access code to use. Contact your HR operations team for the code. All other sections (Dashboard, Practice Areas, Documents, User Guide, Security) are freely accessible for browsing.</p>
                 </div>
               </div>
 
@@ -1660,8 +1658,8 @@ ${data}`,
                 </div>
                 <div className="guide-card-body">
                   <div className="guide-examples">
-                    <div className="guide-example"><span className="guide-ex-icon">👨‍⚖️</span><div><strong>Human Review Required</strong><br/>Every output is a draft for HR leadership review. The AI accelerates legal work but does not replace professional judgment. A qualified attorney must review, verify, and approve all outputs before they are acted upon.</div></div>
-                    <div className="guide-example"><span className="guide-ex-icon">🔒</span><div><strong>Privilege Awareness</strong><br/>The platform includes privilege safeguards — destination checks before output, matter-level isolation, and privilege-tagged document handling. However, users must ensure proper privilege protocols are followed.</div></div>
+                    <div className="guide-example"><span className="guide-ex-icon">⚠️</span><div><strong>Human Review Required</strong><br/>Every output is a draft for HR leadership review. The AI accelerates HR analysis but does not replace professional judgment. A qualified HR professional must review, verify, and approve all outputs before they are acted upon.</div></div>
+                    <div className="guide-example"><span className="guide-ex-icon">🔒</span><div><strong>Confidentiality Controls</strong><br/>The platform includes data safeguards — destination checks before output, workspace-level isolation, and confidential document handling. Users must ensure proper data classification protocols are followed.</div></div>
                     <div className="guide-example"><span className="guide-ex-icon">📋</span><div><strong>Audit Trail</strong><br/>All interactions are logged for compliance purposes. Export your sessions as needed for matter files.</div></div>
                   </div>
                 </div>
@@ -1712,7 +1710,7 @@ ${data}`,
               <p className="assessment-text">
                 The codebase demonstrates strong security practices: closed-schema intents prevent prompt injection escalation,
                 input validation hardens shell scripts, YAML parsing uses safe_load exclusively, no hardcoded secrets were detected,
-                and matter isolation maintains privilege boundaries. The three warnings are acknowledged by the authors and represent
+                and workspace isolation maintains access control boundaries. The three warnings are acknowledged by the authors and represent
                 defense-in-depth gaps rather than critical vulnerabilities. Overall: production-ready with recommended hardening for
                 audit log integrity and MCP TLS pinning.
               </p>
